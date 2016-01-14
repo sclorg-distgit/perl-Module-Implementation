@@ -1,0 +1,174 @@
+diff -up ./t/basic.t.orig ./t/basic.t
+--- ./t/basic.t.orig	2013-07-14 17:58:57.000000000 +0100
++++ ./t/basic.t	2013-07-15 13:55:40.798191023 +0100
+@@ -1,7 +1,7 @@
+ use strict;
+ use warnings;
+ 
+-use Test::More 0.88;
++use Test::More tests => 5;
+ 
+ {
+     package T;
+@@ -33,5 +33,3 @@ use Test::More 0.88;
+         'T::_implementation returns default implementation'
+     );
+ }
+-
+-done_testing();
+diff -up ./t/both-fail.t.orig ./t/both-fail.t
+--- ./t/both-fail.t.orig	2013-07-14 17:58:57.000000000 +0100
++++ ./t/both-fail.t	2013-07-15 13:55:40.798191023 +0100
+@@ -1,7 +1,7 @@
+ use strict;
+ use warnings;
+ 
+-use Test::More 0.88;
++use Test::More tests => 1;
+ use Test::Fatal 0.006;
+ 
+ {
+@@ -24,5 +24,3 @@ use Test::Fatal 0.006;
+         'Got an exception when all implementations fail to load'
+     );
+ }
+-
+-done_testing();
+diff -up ./t/env-value.t.orig ./t/env-value.t
+--- ./t/env-value.t.orig	2013-07-14 17:58:57.000000000 +0100
++++ ./t/env-value.t	2013-07-15 13:55:40.799191020 +0100
+@@ -1,7 +1,7 @@
+ use strict;
+ use warnings;
+ 
+-use Test::More 0.88;
++use Test::More tests => 4;
+ 
+ {
+     package T;
+@@ -35,5 +35,3 @@ use Test::More 0.88;
+         'T::_implementation returns implementation set in ENV'
+     );
+ }
+-
+-done_testing();
+diff -up ./t/more-symbols.t.orig ./t/more-symbols.t
+--- ./t/more-symbols.t.orig	2013-07-14 17:58:57.000000000 +0100
++++ ./t/more-symbols.t	2013-07-15 13:55:40.799191020 +0100
+@@ -1,7 +1,7 @@
+ use strict;
+ use warnings;
+ 
+-use Test::More 0.88;
++use Test::More tests => 7;
+ 
+ {
+     package T;
+@@ -43,5 +43,3 @@ use Test::More 0.88;
+         '%T::HASH was copied from implementation'
+     );
+ }
+-
+-done_testing();
+diff -up ./t/one-impl-fails1.t.orig ./t/one-impl-fails1.t
+--- ./t/one-impl-fails1.t.orig	2013-07-14 17:58:57.000000000 +0100
++++ ./t/one-impl-fails1.t	2013-07-15 13:55:40.799191020 +0100
+@@ -1,7 +1,7 @@
+ use strict;
+ use warnings;
+ 
+-use Test::More 0.88;
++use Test::More tests => 2;
+ 
+ {
+     package T;
+@@ -24,5 +24,3 @@ use Test::More 0.88;
+     ok( T->can('return_42'),       'T package has a return_42 sub' );
+     ok( !T->can('return_package'), 'T package has a return_package sub' );
+ }
+-
+-done_testing();
+diff -up ./t/one-impl-fails2.t.orig ./t/one-impl-fails2.t
+--- ./t/one-impl-fails2.t.orig	2013-07-14 17:58:57.000000000 +0100
++++ ./t/one-impl-fails2.t	2013-07-15 13:55:40.799191020 +0100
+@@ -1,7 +1,7 @@
+ use strict;
+ use warnings;
+ 
+-use Test::More 0.88;
++use Test::More tests => 2;
+ 
+ {
+     package T;
+@@ -24,5 +24,3 @@ use Test::More 0.88;
+     ok( T->can('return_42'),       'T package has a return_42 sub' );
+     ok( !T->can('return_package'), 'T package has a return_package sub' );
+ }
+-
+-done_testing();
+diff -up ./t/release-cpan-changes.t.orig ./t/release-cpan-changes.t
+--- ./t/release-cpan-changes.t.orig	2013-07-14 17:58:57.000000000 +0100
++++ ./t/release-cpan-changes.t	2013-07-15 13:56:13.666095355 +0100
+@@ -1,19 +1,16 @@
+ #!perl
+ 
++use Test::More;
++
+ BEGIN {
+-  unless ($ENV{RELEASE_TESTING}) {
+-    require Test::More;
+-    Test::More::plan(skip_all => 'these tests are for release candidate testing');
+-  }
++  plan skip_all => 'these tests are for release candidate testing' unless ($ENV{RELEASE_TESTING});
++  eval 'use Test::CPAN::Changes';
++  plan skip_all => 'Test::CPAN::Changes required for this test' if $@;
+ }
+ 
+ 
+ use strict;
+ use warnings;
+ 
+-use Test::More 0.96 tests => 2;
+-use_ok('Test::CPAN::Changes');
+-subtest 'changes_ok' => sub {
+-    changes_file_ok('Changes');
+-};
+-done_testing();
++plan tests => 4;
++changes_file_ok('Changes');
+diff -up ./t/requested-fails.t.orig ./t/requested-fails.t
+--- ./t/requested-fails.t.orig	2013-07-14 17:58:57.000000000 +0100
++++ ./t/requested-fails.t	2013-07-15 13:55:40.800191017 +0100
+@@ -1,7 +1,7 @@
+ use strict;
+ use warnings;
+ 
+-use Test::More 0.88;
++use Test::More tests => 1;
+ use Test::Fatal 0.006;
+ 
+ {
+@@ -26,5 +26,3 @@ use Test::Fatal 0.006;
+         'Got an exception when implementation requested in env value fails to load'
+     );
+ }
+-
+-done_testing();
+diff -up ./t/taint.t.orig ./t/taint.t
+--- ./t/taint.t.orig	2013-07-14 17:58:57.000000000 +0100
++++ ./t/taint.t	2013-07-15 13:55:40.800191017 +0100
+@@ -7,7 +7,7 @@ use Test::Requires {
+     'Test::Taint' => '0',
+ };
+ 
+-use Test::More 0.88;
++use Test::More tests => 4;
+ use Test::Fatal 0.006;
+ 
+ taint_checking_ok();
+@@ -44,5 +44,3 @@ taint_checking_ok();
+         'T::_implementation returns implementation set in ENV'
+     );
+ }
+-
+-done_testing();
